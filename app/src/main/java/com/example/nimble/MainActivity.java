@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
     // VARIABLES
     EditText name_et;
     Button start_btn;
+
+    // CALL SHARED PREF
     SharedPreferences sharedPreferences;
 
     private static final String SHARED_PREFS = "sharedPrefs";
@@ -30,20 +32,38 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
+        // CHECK IF SHARED PREF DATA AVAILABLE OR NOT
+        String name = sharedPreferences.getString(USER_NAME, null);
+
+        if (name != null){
+            // IF DATA IS AVAILABLE, GO DIRECTLY TO HOME PAGE
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        }
+
         // ADD TO SHARED PREFERENCES WHEN BUTTON CLICKED AND CHANGE PAGE
         start_btn.setOnClickListener(v -> {
 
-            // ADD NAME TO SHARED PREFS
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(USER_NAME, name_et.getText().toString());
-            editor.apply();
+            if (name_et.getText().toString() == "") {
 
-            // NAVIGATE TO NEXT PAGE
-            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-            startActivity(intent);
+                // MAKE TOAST TO TELL USER TO ENTER A NAME
+                Toast.makeText(MainActivity.this, "Please enter your name", Toast.LENGTH_SHORT).show();
+            }
+            else {
 
-            // MAKE TOAST TO SAY IF SUCCESSFUL
-            Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                // ADD NAME TO SHARED PREFS
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(USER_NAME, name_et.getText().toString());
+                editor.apply();
+
+                // NAVIGATE TO NEXT PAGE
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+
+                // MAKE TOAST TO SAY IF SUCCESSFUL
+                Toast.makeText(MainActivity.this, "Successful", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 }
