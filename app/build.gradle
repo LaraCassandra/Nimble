@@ -46,6 +46,9 @@ dependencies {
     // COLOR PICKER
     implementation 'com.github.yukuku:ambilwarna:2.0.1'
 
+    // ML KIT IMAGE LABELLING
+    implementation 'com.google.mlkit:image-labeling:17.0.5'
+
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
