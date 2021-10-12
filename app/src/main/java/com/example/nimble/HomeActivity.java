@@ -47,7 +47,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class HomeActivity extends AppCompatActivity {
 
     // VARIABLES
-    TextView name_tv, test_tv;
+    TextView name_tv, image_tv;
     ImageView avatar_iv;
     Button btn_submit, btn_popup_close, btn_popup_next;
 
@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity {
 
     // POPUP BOX
     private AlertDialog.Builder dialogBuilder;
-    private AlertDialog dialog;
+    private AlertDialog dialog, dialog2;
 
     Random r;
 
@@ -92,7 +92,8 @@ public class HomeActivity extends AppCompatActivity {
 
         // FIND TEXTVIEW IN INTERFACE
         name_tv = findViewById(R.id.name_tv);
-        test_tv = findViewById(R.id.tv_test);
+        image_tv = findViewById(R.id.image_tv);
+
 
         // FIND IMAGE IN INTERFACE
         avatar_iv = findViewById(R.id.avatar_iv);
@@ -167,7 +168,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!signatureView.isBitmapEmpty()){
-                    getLabel();
+                    createDiaglog();
                 }
                 else {
                     Toast.makeText(HomeActivity.this, "Draw something first", Toast.LENGTH_SHORT).show();
@@ -177,12 +178,16 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    // ON SUBMIT - CHECK WHAT WAS DRAWN POPUP
     public void createDiaglog(){
-        dialogBuilder = new AlertDialog.Builder(this);
-        final View popupView = getLayoutInflater().inflate(R.layout.popup_first, null)
-    }
 
-    private void getLabel() {
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View popupView = getLayoutInflater().inflate(R.layout.popup_first, null);
+
+        btn_popup_next = popupView.findViewById(R.id.btn_popup_next);
+        btn_popup_close = popupView.findViewById(R.id.btn_popup_close);
+        image_tv = popupView.findViewById(R.id.image_tv);
+
         Bitmap bitmap = signatureView.getSignatureBitmap();
 
         InputImage image = InputImage.fromBitmap(bitmap, 0);
@@ -198,7 +203,7 @@ public class HomeActivity extends AppCompatActivity {
                             String text = label.getText();
                             float confidence = label.getConfidence();
                             int index = label.getIndex();
-                            test_tv.setText(label.getText());
+                            image_tv.setText(label.getText());
                         }
                     }
                 })
@@ -209,7 +214,76 @@ public class HomeActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+
+        dialogBuilder.setView(popupView);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+
+        // CLOSE THE POPUP
+        btn_popup_close.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                signatureView.clearCanvas();
+                dialog.dismiss();
+            }
+        });
+
     }
+
+    public void createDiaglog2(){
+
+        dialogBuilder = new AlertDialog.Builder(this);
+        final View popupView2 = getLayoutInflater().inflate(R.layout.popup_second, null);
+
+        btn_popup_next = popupView2.findViewById(R.id.btn_popup_next);
+        btn_popup_close = popupView2.findViewById(R.id.btn_popup_close);
+        image_tv = popupView2.findViewById(R.id.image_tv);
+
+
+        dialogBuilder.setView(popupView2);
+        dialog = dialogBuilder.create();
+        dialog.show();
+
+
+        // CLOSE THE POPUP
+        btn_popup_close.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+    }
+
+//    private void getLabel() {
+//        Bitmap bitmap = signatureView.getSignatureBitmap();
+//
+//        InputImage image = InputImage.fromBitmap(bitmap, 0);
+//
+//        ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
+//
+//        labeler.process(image)
+//                .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
+//                    @Override
+//                    public void onSuccess(List<ImageLabel> labels) {
+//                        // Task completed successfully
+//                        for (ImageLabel label : labels) {
+//                            String text = label.getText();
+//                            float confidence = label.getConfidence();
+//                            int index = label.getIndex();
+//                            image_tv.setText(label.getText());
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        // Task failed with an exception
+//                        // ...
+//                    }
+//                });
+//    }
 
     private void saveImage() throws IOException {
         File file = new File(fileName);
@@ -228,8 +302,6 @@ public class HomeActivity extends AppCompatActivity {
         Toast.makeText(this, "Painting Saved!", Toast.LENGTH_SHORT).show();
 
     }
-
-
 
     private void openColorPicker() {
         AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
