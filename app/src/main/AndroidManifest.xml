@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoActionBarTheme">
+        <activity android:name=".WordsActivity"></activity>
         <!-- PROFILE ACTIVITY -->
         <activity
             android:name=".ProfileActivity"
