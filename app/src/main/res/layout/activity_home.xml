@@ -7,12 +7,13 @@
     android:layout_gravity="center"
     android:background="@drawable/gradient_drawable">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/avatar_iv"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:scaleType="centerInside"
         android:src="@drawable/avatar_3"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.073"

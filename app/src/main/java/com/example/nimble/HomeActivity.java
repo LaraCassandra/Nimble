@@ -1,8 +1,10 @@
 package com.example.nimble;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -19,6 +21,10 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.Translation;
+import com.google.mlkit.nl.translate.Translator;
+import com.google.mlkit.nl.translate.TranslatorOptions;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.label.ImageLabeler;
@@ -48,8 +54,8 @@ public class HomeActivity extends AppCompatActivity {
 
     // VARIABLES
     TextView name_tv, image_tv;
-    ImageView avatar_iv;
-    Button btn_submit, btn_popup_close, btn_popup_next;
+    ImageButton avatar_iv;
+    Button btn_submit, btn_popup_close, btn_popup_next, btn_popup_okay;
 
     // DRAWING
     SignatureView signatureView;
@@ -76,6 +82,16 @@ public class HomeActivity extends AppCompatActivity {
       R.drawable.avatar_6
     };
 
+    // Create an English-German translator:
+    TranslatorOptions options =
+            new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.GERMAN)
+                    .build();
+    final Translator englishGermanTranslator =
+            Translation.getClient(options);
+
+
     // CALL SHARED PREFS
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS = "sharedPrefs";
@@ -85,6 +101,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
 
         // TODO: FIX AVATAR DISPLAY
         // DISPLAY RANDOM AVATAR
@@ -100,6 +117,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // FIND SUBMIT BUTTON IN INTERFACE
         btn_submit = findViewById(R.id.btn_submit);
+
+        // PROFILE BUTTON
+        avatar_iv = findViewById(R.id.avatar_iv);
 
         // FIND DRAWING BUTTONS IN INTERFACE
         signatureView = findViewById(R.id.signature_view);
@@ -176,6 +196,16 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        // PROFILE BUTTON
+        avatar_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // NAVIGATE TO NEXT PAGE
+                Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     // ON SUBMIT - CHECK WHAT WAS DRAWN POPUP
@@ -219,6 +249,15 @@ public class HomeActivity extends AppCompatActivity {
         dialog = dialogBuilder.create();
         dialog.show();
 
+        //  OPEN TRANSLATION POPUP
+        btn_popup_next.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                signatureView.clearCanvas();
+                dialog.dismiss();
+                createDiaglog2();
+            }
+        });
 
         // CLOSE THE POPUP
         btn_popup_close.setOnClickListener(new View.OnClickListener(){
@@ -236,54 +275,22 @@ public class HomeActivity extends AppCompatActivity {
         dialogBuilder = new AlertDialog.Builder(this);
         final View popupView2 = getLayoutInflater().inflate(R.layout.popup_second, null);
 
-        btn_popup_next = popupView2.findViewById(R.id.btn_popup_next);
-        btn_popup_close = popupView2.findViewById(R.id.btn_popup_close);
-        image_tv = popupView2.findViewById(R.id.image_tv);
-
+        btn_popup_next = popupView2.findViewById(R.id.btn_popup_okay);
 
         dialogBuilder.setView(popupView2);
-        dialog = dialogBuilder.create();
-        dialog.show();
+        dialog2 = dialogBuilder.create();
+        dialog2.show();
 
 
         // CLOSE THE POPUP
         btn_popup_close.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                dialog2.dismiss();
             }
         });
 
     }
-
-//    private void getLabel() {
-//        Bitmap bitmap = signatureView.getSignatureBitmap();
-//
-//        InputImage image = InputImage.fromBitmap(bitmap, 0);
-//
-//        ImageLabeler labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS);
-//
-//        labeler.process(image)
-//                .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
-//                    @Override
-//                    public void onSuccess(List<ImageLabel> labels) {
-//                        // Task completed successfully
-//                        for (ImageLabel label : labels) {
-//                            String text = label.getText();
-//                            float confidence = label.getConfidence();
-//                            int index = label.getIndex();
-//                            image_tv.setText(label.getText());
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // Task failed with an exception
-//                        // ...
-//                    }
-//                });
-//    }
 
     private void saveImage() throws IOException {
         File file = new File(fileName);

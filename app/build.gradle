@@ -49,6 +49,9 @@ dependencies {
     // ML KIT IMAGE LABELLING
     implementation 'com.google.mlkit:image-labeling:17.0.5'
 
+    // ML KIT TRANSLATION
+    implementation 'com.google.mlkit:translate:16.1.2'
+
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

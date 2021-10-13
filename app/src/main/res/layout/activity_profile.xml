@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.04" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/username_tv"
@@ -33,35 +33,52 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
         app:layout_constraintVertical_bias="0.0" />
 
+    <ProgressBar
+        android:id="@+id/determinateBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@color/white"
+        android:progress="25"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_tv"
+        app:layout_constraintVertical_bias="0.0" />
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_draw"
         android:layout_width="350dp"
         android:layout_height="80dp"
-        android:layout_marginStart="250dp"
+        android:layout_marginStart="248dp"
         android:background="@drawable/button"
         android:fontFamily="@font/houschka"
         android:padding="5dp"
-        android:text="Submit"
+        android:text="Draw More"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/username_tv"
+        app:layout_constraintVertical_bias="0.657" />
 
     <Button
         android:layout_width="350dp"
         android:layout_height="80dp"
-        android:layout_marginEnd="200dp"
-        android:background="@drawable/button"
+        android:layout_marginTop="63dp"
+        android:layout_marginEnd="196dp"
+        android:background="@color/bg_purple"
         android:fontFamily="@font/houschka"
         android:padding="5dp"
-        android:text="Submit"
+        android:text="My Words"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/username_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/determinateBar"
+        app:layout_constraintVertical_bias="0.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
