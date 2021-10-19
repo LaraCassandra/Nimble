@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        language = parent.getItemAtPosition(position).toString().toLowerCase();
+        language = parent.getItemAtPosition(position).toString().toUpperCase();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(USER_LANGUAGE, language);

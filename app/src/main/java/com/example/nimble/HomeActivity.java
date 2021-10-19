@@ -23,7 +23,9 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -88,17 +90,14 @@ public class HomeActivity extends AppCompatActivity {
       R.drawable.avatar_6
     };
 
-    // CREATE ENGLISH - SPANISH TRANSLATOR
-//    TranslatorOptions options =
-//            new TranslatorOptions.Builder()
-//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
-//                    .setTargetLanguage(TranslateLanguage.SPANISH)
-//                    .build();
-//    final Translator myTranslator =
-//            Translation.getClient(options);
-
-    TranslatorOptions options;
-    Translator myTranslator;
+    // Create an English-German translator:
+    TranslatorOptions options =
+            new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.SPANISH)
+                    .build();
+    final Translator englishSpanishTranslator =
+            Translation.getClient(options);
 
 
     // CALL SHARED PREFS
@@ -117,66 +116,6 @@ public class HomeActivity extends AppCompatActivity {
         String name = sharedPreferences.getString(USER_NAME, null);
         String language = sharedPreferences.getString(USER_LANGUAGE, null);
 
-        // MAKE LANGUAGE TRANSLATOR MODEL
-        if (language == "SPANISH"){
-            options =
-                    new TranslatorOptions.Builder()
-                            .setSourceLanguage(TranslateLanguage.ENGLISH)
-                            .setTargetLanguage(TranslateLanguage.SPANISH)
-                    .build();
-
-            myTranslator = Translation.getClient(options);
-
-            DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi()
-                    .build();
-            myTranslator.downloadModelIfNeeded(conditions);
-        }
-        else if (language == "GERMAN"){
-            options =
-                    new TranslatorOptions.Builder()
-                            .setSourceLanguage(TranslateLanguage.ENGLISH)
-                            .setTargetLanguage(TranslateLanguage.GERMAN)
-                            .build();
-
-            myTranslator = Translation.getClient(options);
-
-            DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi()
-                    .build();
-            myTranslator.downloadModelIfNeeded(conditions);
-
-        }
-        else if (language == "FRENCH"){
-            options =
-                    new TranslatorOptions.Builder()
-                            .setSourceLanguage(TranslateLanguage.ENGLISH)
-                            .setTargetLanguage(TranslateLanguage.FRENCH)
-                            .build();
-
-            myTranslator = Translation.getClient(options);
-
-            DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi()
-                    .build();
-            myTranslator.downloadModelIfNeeded(conditions);
-
-        }
-        else {
-            options =
-                    new TranslatorOptions.Builder()
-                            .setSourceLanguage(TranslateLanguage.ENGLISH)
-                            .setTargetLanguage(TranslateLanguage.AFRIKAANS)
-                            .build();
-
-            myTranslator = Translation.getClient(options);
-
-            DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi()
-                    .build();
-            myTranslator.downloadModelIfNeeded(conditions);
-
-        }
 
         // TODO: FIX AVATAR DISPLAY
         // DISPLAY RANDOM AVATAR
@@ -302,12 +241,10 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(List<ImageLabel> labels) {
                         // Task completed successfully
-                        String words = "";
 
                         for (ImageLabel label : labels) {
 
                             String firstLabel = labels.get(0).getText();
-
                             String text = label.getText();
                             float confidence = label.getConfidence();
                             int index = label.getIndex();
@@ -356,7 +293,7 @@ public class HomeActivity extends AppCompatActivity {
         DownloadConditions conditions = new DownloadConditions.Builder()
                 .requireWifi()
                 .build();
-        myTranslator.downloadModelIfNeeded(conditions);
+        englishSpanishTranslator.downloadModelIfNeeded(conditions);
 
     }
 
@@ -373,7 +310,9 @@ public class HomeActivity extends AppCompatActivity {
         dialog2 = dialogBuilder.create();
 
         // TRANSLATE THE TEXT
-        myTranslator.translate(translateText)
+        downloadTranslator();
+
+        englishSpanishTranslator.translate(translateText)
                 .addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(@NonNull String translatedText) {
