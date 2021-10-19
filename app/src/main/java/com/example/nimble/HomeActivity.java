@@ -273,6 +273,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signatureView.clearCanvas();
                 dialog.dismiss();
+                downloadTranslator();
                 createDiaglog2();
             }
         });
@@ -310,8 +311,6 @@ public class HomeActivity extends AppCompatActivity {
         dialog2 = dialogBuilder.create();
 
         // TRANSLATE THE TEXT
-        downloadTranslator();
-
         englishSpanishTranslator.translate(translateText)
                 .addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
