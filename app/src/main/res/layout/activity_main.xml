@@ -54,29 +54,15 @@
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.057" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <Spinner
+        android:id="@+id/languages"
         android:layout_width="400dp"
         android:layout_height="60dp"
         android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/start_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_et">
-
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:fontFamily="@font/houschka"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:text="English"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@+id/name_et" />
 
     <Button
         android:id="@+id/start_btn"

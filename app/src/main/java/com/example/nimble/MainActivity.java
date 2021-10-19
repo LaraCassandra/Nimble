@@ -6,8 +6,12 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -18,11 +22,14 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     // VARIABLES
     EditText name_et;
     Button start_btn;
+    Spinner spinner;
+
+    String language = "";
 
     // CALL SHARED PREF
     SharedPreferences sharedPreferences;
@@ -42,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         // FIND EDITTEXT BOX AND BUTTON FROM INTERFACE
         name_et = findViewById(R.id.name_et);
         start_btn = findViewById(R.id.start_btn);
+
+        // LANGUAGES PICKER
+        spinner = findViewById(R.id.languages);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
@@ -88,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 .withListener(new MultiplePermissionsListener() {
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                        Toast.makeText(MainActivity.this, "Granted", Toast.LENGTH_SHORT);
+                        Toast.makeText(MainActivity.this, "Granted", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -96,5 +110,22 @@ public class MainActivity extends AppCompatActivity {
                         permissionToken.continuePermissionRequest();
                     }
                 }).check();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+        language = parent.getItemAtPosition(position).toString().toLowerCase();
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(USER_LANGUAGE, language);
+            editor.apply();
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+
     }
 }

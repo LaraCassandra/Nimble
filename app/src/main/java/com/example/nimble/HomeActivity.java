@@ -89,25 +89,94 @@ public class HomeActivity extends AppCompatActivity {
     };
 
     // CREATE ENGLISH - SPANISH TRANSLATOR
-    TranslatorOptions options =
-            new TranslatorOptions.Builder()
-                    .setSourceLanguage(TranslateLanguage.ENGLISH)
-                    .setTargetLanguage(TranslateLanguage.SPANISH)
-                    .build();
-    final Translator englishSpanishTranslator =
-            Translation.getClient(options);
+//    TranslatorOptions options =
+//            new TranslatorOptions.Builder()
+//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                    .setTargetLanguage(TranslateLanguage.SPANISH)
+//                    .build();
+//    final Translator myTranslator =
+//            Translation.getClient(options);
+
+    TranslatorOptions options;
+    Translator myTranslator;
 
 
     // CALL SHARED PREFS
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final String USER_NAME = "userName";
+    private static final String USER_LANGUAGE = "userLanguage";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String name = sharedPreferences.getString(USER_NAME, null);
+        String language = sharedPreferences.getString(USER_LANGUAGE, null);
+
+        // MAKE LANGUAGE TRANSLATOR MODEL
+        if (language == "SPANISH"){
+            options =
+                    new TranslatorOptions.Builder()
+                            .setSourceLanguage(TranslateLanguage.ENGLISH)
+                            .setTargetLanguage(TranslateLanguage.SPANISH)
+                    .build();
+
+            myTranslator = Translation.getClient(options);
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+            myTranslator.downloadModelIfNeeded(conditions);
+        }
+        else if (language == "GERMAN"){
+            options =
+                    new TranslatorOptions.Builder()
+                            .setSourceLanguage(TranslateLanguage.ENGLISH)
+                            .setTargetLanguage(TranslateLanguage.GERMAN)
+                            .build();
+
+            myTranslator = Translation.getClient(options);
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+            myTranslator.downloadModelIfNeeded(conditions);
+
+        }
+        else if (language == "FRENCH"){
+            options =
+                    new TranslatorOptions.Builder()
+                            .setSourceLanguage(TranslateLanguage.ENGLISH)
+                            .setTargetLanguage(TranslateLanguage.FRENCH)
+                            .build();
+
+            myTranslator = Translation.getClient(options);
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+            myTranslator.downloadModelIfNeeded(conditions);
+
+        }
+        else {
+            options =
+                    new TranslatorOptions.Builder()
+                            .setSourceLanguage(TranslateLanguage.ENGLISH)
+                            .setTargetLanguage(TranslateLanguage.AFRIKAANS)
+                            .build();
+
+            myTranslator = Translation.getClient(options);
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+            myTranslator.downloadModelIfNeeded(conditions);
+
+        }
 
         // TODO: FIX AVATAR DISPLAY
         // DISPLAY RANDOM AVATAR
@@ -135,9 +204,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // SET RANDOM
         r = new Random();
-
-        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        String name = sharedPreferences.getString(USER_NAME, null);
 
         if (name != null) {
             // SET THE NAME TO TEXTVIEW
@@ -270,7 +336,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signatureView.clearCanvas();
                 dialog.dismiss();
-                downloadTranslator();
                 createDiaglog2();
             }
         });
@@ -286,18 +351,12 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void translate() {
-
-
-
-    }
-
     private void downloadTranslator() {
 
         DownloadConditions conditions = new DownloadConditions.Builder()
                 .requireWifi()
                 .build();
-        englishSpanishTranslator.downloadModelIfNeeded(conditions);
+        myTranslator.downloadModelIfNeeded(conditions);
 
     }
 
@@ -314,7 +373,7 @@ public class HomeActivity extends AppCompatActivity {
         dialog2 = dialogBuilder.create();
 
         // TRANSLATE THE TEXT
-        englishSpanishTranslator.translate(translateText)
+        myTranslator.translate(translateText)
                 .addOnSuccessListener(new OnSuccessListener<String>() {
                     @Override
                     public void onSuccess(@NonNull String translatedText) {
