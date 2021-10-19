@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,6 +22,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.mlkit.common.model.DownloadConditions;
 import com.google.mlkit.nl.translate.TranslateLanguage;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
@@ -53,9 +55,13 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class HomeActivity extends AppCompatActivity {
 
     // VARIABLES
-    TextView name_tv, image_tv;
+    TextView name_tv, image_tv, translated_tv;
     ImageButton avatar_iv;
     Button btn_submit, btn_popup_close, btn_popup_next, btn_popup_okay;
+    
+    public String translateText = "";
+    public String test = "";
+    //public String translatedText = "";
 
     // DRAWING
     SignatureView signatureView;
@@ -82,13 +88,13 @@ public class HomeActivity extends AppCompatActivity {
       R.drawable.avatar_6
     };
 
-    // Create an English-German translator:
+    // CREATE ENGLISH - SPANISH TRANSLATOR
     TranslatorOptions options =
             new TranslatorOptions.Builder()
                     .setSourceLanguage(TranslateLanguage.ENGLISH)
-                    .setTargetLanguage(TranslateLanguage.GERMAN)
+                    .setTargetLanguage(TranslateLanguage.SPANISH)
                     .build();
-    final Translator englishGermanTranslator =
+    final Translator englishSpanishTranslator =
             Translation.getClient(options);
 
 
@@ -189,6 +195,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!signatureView.isBitmapEmpty()){
                     createDiaglog();
+
                 }
                 else {
                     Toast.makeText(HomeActivity.this, "Draw something first", Toast.LENGTH_SHORT).show();
@@ -229,12 +236,20 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(List<ImageLabel> labels) {
                         // Task completed successfully
+                        String words = "";
+
                         for (ImageLabel label : labels) {
+
+                            String firstLabel = labels.get(0).getText();
+
                             String text = label.getText();
                             float confidence = label.getConfidence();
                             int index = label.getIndex();
-                            image_tv.setText(label.getText());
+
+                            translateText = firstLabel;
+
                         }
+                        image_tv.setText(translateText);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -255,6 +270,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signatureView.clearCanvas();
                 dialog.dismiss();
+                downloadTranslator();
                 createDiaglog2();
             }
         });
@@ -270,17 +286,50 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void translate() {
+
+
+
+    }
+
+    private void downloadTranslator() {
+
+        DownloadConditions conditions = new DownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        englishSpanishTranslator.downloadModelIfNeeded(conditions);
+
+    }
+
+    // IF DRAWING CORRECT - OPEN TRANSLATION POPUP
     public void createDiaglog2(){
 
         dialogBuilder = new AlertDialog.Builder(this);
         final View popupView2 = getLayoutInflater().inflate(R.layout.popup_second, null);
 
         btn_popup_next = popupView2.findViewById(R.id.btn_popup_okay);
+        translated_tv = popupView2.findViewById(R.id.translated_tv);
 
         dialogBuilder.setView(popupView2);
         dialog2 = dialogBuilder.create();
-        dialog2.show();
 
+        // TRANSLATE THE TEXT
+        englishSpanishTranslator.translate(translateText)
+                .addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(@NonNull String translatedText) {
+                        Toast.makeText(HomeActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                        translated_tv.setText(translatedText);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(HomeActivity.this, "Could not translate", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        dialog2.show();
 
         // CLOSE THE POPUP
         btn_popup_close.setOnClickListener(new View.OnClickListener(){

@@ -12,22 +12,22 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/houschka"
-        android:text="Good job! Your word in German is"
+        android:text="Good job! Your word in Spanish is"
         android:textColor="@color/white"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/image_tv"
+        app:layout_constraintBottom_toTopOf="@+id/translated_tv"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.713" />
 
     <TextView
-        android:id="@+id/image_tv"
+        android:id="@+id/translated_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/houschka"
         android:padding="20dp"
-        android:text=""
+        android:text="Yeah"
         android:textColor="@color/white"
         android:textSize="120sp"
 

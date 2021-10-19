@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final String USER_NAME = "userName";
+    private static final String USER_LANGUAGE = "userLanguage";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
