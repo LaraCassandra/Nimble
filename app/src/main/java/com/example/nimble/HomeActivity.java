@@ -1,17 +1,13 @@
 package com.example.nimble;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,9 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.common.model.DownloadConditions;
-import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
-import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -34,16 +28,10 @@ import com.google.mlkit.vision.label.ImageLabel;
 import com.google.mlkit.vision.label.ImageLabeler;
 import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.kyanogen.signatureview.SignatureView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -89,15 +77,9 @@ public class HomeActivity extends AppCompatActivity {
       R.drawable.avatar_5,
       R.drawable.avatar_6
     };
-
-    // Create an English-German translator:
-    TranslatorOptions options =
-            new TranslatorOptions.Builder()
-                    .setSourceLanguage(TranslateLanguage.ENGLISH)
-                    .setTargetLanguage(TranslateLanguage.SPANISH)
-                    .build();
-    final Translator englishSpanishTranslator =
-            Translation.getClient(options);
+//
+//    TranslatorOptions options;
+//    Translator myTranslator;
 
 
     // CALL SHARED PREFS
@@ -116,6 +98,38 @@ public class HomeActivity extends AppCompatActivity {
         String name = sharedPreferences.getString(USER_NAME, null);
         String language = sharedPreferences.getString(USER_LANGUAGE, null);
 
+//        if (language.equals("AFRIKAANS")){
+//            options = new TranslatorOptions.Builder()
+//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                    .setTargetLanguage(TranslateLanguage.AFRIKAANS)
+//                    .build();
+//
+//            myTranslator = Translation.getClient(options);
+//        }
+//        else if (language.equals("SPANISH")){
+//            options = new TranslatorOptions.Builder()
+//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                    .setTargetLanguage(TranslateLanguage.SPANISH)
+//                    .build();
+//
+//            myTranslator = Translation.getClient(options);
+//        }
+//        else if (language.equals("FRENCH")){
+//            options = new TranslatorOptions.Builder()
+//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                    .setTargetLanguage(TranslateLanguage.FRENCH)
+//                    .build();
+//
+//            myTranslator = Translation.getClient(options);
+//        }
+//        else if (language.equals("GERMAN")){
+//            options = new TranslatorOptions.Builder()
+//                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+//                    .setTargetLanguage(TranslateLanguage.GERMAN)
+//                    .build();
+//
+//            myTranslator = Translation.getClient(options);
+//        }
 
         // TODO: FIX AVATAR DISPLAY
         // DISPLAY RANDOM AVATAR
@@ -176,7 +190,7 @@ public class HomeActivity extends AppCompatActivity {
         // CHECK IF PATH EXISTS
         if (!path.exists()){
           path.mkdirs();
-        };
+        }
 
         // SAVE PICTURE
         btn_save.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +258,9 @@ public class HomeActivity extends AppCompatActivity {
 
                         for (ImageLabel label : labels) {
 
+                            // GET THE FIRST LABEL
                             String firstLabel = labels.get(0).getText();
+
                             String text = label.getText();
                             float confidence = label.getConfidence();
                             int index = label.getIndex();
@@ -273,7 +289,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 signatureView.clearCanvas();
                 dialog.dismiss();
-                downloadTranslator();
                 createDiaglog2();
             }
         });
@@ -291,11 +306,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private void downloadTranslator() {
 
-        DownloadConditions conditions = new DownloadConditions.Builder()
-                .requireWifi()
-                .build();
-        englishSpanishTranslator.downloadModelIfNeeded(conditions);
-
     }
 
     // IF DRAWING CORRECT - OPEN TRANSLATION POPUP
@@ -304,32 +314,71 @@ public class HomeActivity extends AppCompatActivity {
         dialogBuilder = new AlertDialog.Builder(this);
         final View popupView2 = getLayoutInflater().inflate(R.layout.popup_second, null);
 
-        btn_popup_next = popupView2.findViewById(R.id.btn_popup_okay);
         translated_tv = popupView2.findViewById(R.id.translated_tv);
+        btn_popup_okay = popupView2.findViewById(R.id.btn_popup_okay);
 
         dialogBuilder.setView(popupView2);
         dialog2 = dialogBuilder.create();
 
+
+        // CREATE ENGLISH-AFRIKAANS TRANSLATER
+        TranslatorOptions options =
+                new TranslatorOptions.Builder()
+                        .setSourceLanguage(TranslateLanguage.ENGLISH)
+                        .setTargetLanguage(TranslateLanguage.AFRIKAANS)
+                        .build();
+        final Translator englishAfrikaansTranslator =
+                Translation.getClient(options);
+
+
+        DownloadConditions conditions = new DownloadConditions.Builder()
+                .requireWifi()
+                .build();
+        englishAfrikaansTranslator.downloadModelIfNeeded(conditions)
+                .addOnSuccessListener(
+                        new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                // Model downloaded successfully. Okay to start translating.
+                                // (Set a flag, unhide the translation UI, etc.)
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Model couldn’t be downloaded or other internal error.
+                                // ...
+                                Toast.makeText(HomeActivity.this, "Could not download", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
         // TRANSLATE THE TEXT
-        englishSpanishTranslator.translate(translateText)
-                .addOnSuccessListener(new OnSuccessListener<String>() {
-                    @Override
-                    public void onSuccess(@NonNull String translatedText) {
-                        Toast.makeText(HomeActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                        translated_tv.setText(translatedText);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(HomeActivity.this, "Could not translate", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        englishAfrikaansTranslator.translate(translateText)
+                .addOnSuccessListener(
+                        new OnSuccessListener<String>() {
+                            @Override
+                            public void onSuccess(@NonNull String translatedText) {
+                                // Translation successful.
+                                Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                translated_tv.setText(translatedText);
+
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Error.
+                                Toast.makeText(HomeActivity.this, "Could not translate", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
         dialog2.show();
 
         // CLOSE THE POPUP
-        btn_popup_close.setOnClickListener(new View.OnClickListener(){
+        btn_popup_okay.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 dialog2.dismiss();

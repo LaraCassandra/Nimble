@@ -116,7 +116,6 @@
         android:layout_marginTop="9dp"
         android:background="@drawable/button"
         android:fontFamily="@font/houschka"
-        android:padding="5dp"
         android:text="Submit"
         android:textColor="@color/white"
         android:textSize="20sp"
