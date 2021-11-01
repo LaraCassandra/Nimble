@@ -66,7 +66,8 @@ public class HomeActivity extends AppCompatActivity {
     private AlertDialog.Builder dialogBuilder;
     private AlertDialog dialog, dialog2;
 
-    Random r;
+    // RANDOM
+    final Random myRandom = new Random();
 
     // SET ARRAY OF IMAGES
     Integer [] images = {
@@ -86,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     private static final String SHARED_PREFS = "sharedPrefs";
     private static final String USER_NAME = "userName";
+    private static final String USER_IMAGE = "userImage";
     private static final String USER_LANGUAGE = "userLanguage";
 
 
@@ -96,6 +98,13 @@ public class HomeActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         String name = sharedPreferences.getString(USER_NAME, null);
+        String image = sharedPreferences.getString(USER_IMAGE, null);
+
+        // SET RANDOM AVATAR
+        avatar_iv.setImageResource(images[myRandom.nextInt(images.length)]);
+
+        // !  NOT WORKING
+        // LANGUAGE PICKER
         String language = sharedPreferences.getString(USER_LANGUAGE, null);
 
 //        if (language.equals("AFRIKAANS")){
@@ -131,14 +140,9 @@ public class HomeActivity extends AppCompatActivity {
 //            myTranslator = Translation.getClient(options);
 //        }
 
-        // TODO: FIX AVATAR DISPLAY
-        // DISPLAY RANDOM AVATAR
-//        avatar_iv.setImageResource(images[r.nextInt(images.length)]);
-
         // FIND TEXTVIEW IN INTERFACE
         name_tv = findViewById(R.id.name_tv);
         image_tv = findViewById(R.id.image_tv);
-
 
         // FIND IMAGE IN INTERFACE
         avatar_iv = findViewById(R.id.avatar_iv);
@@ -155,13 +159,11 @@ public class HomeActivity extends AppCompatActivity {
         btn_eraser = findViewById(R.id.btn_erase);
         btn_save = findViewById(R.id.btn_save);
 
-        // SET RANDOM
-        r = new Random();
-
         if (name != null) {
             // SET THE NAME TO TEXTVIEW
             name_tv.setText(name);
         }
+
 
         // SET DEFAULT COLOR
         defaultColor = ContextCompat.getColor(HomeActivity.this, R.color.black);
@@ -321,7 +323,7 @@ public class HomeActivity extends AppCompatActivity {
         dialog2 = dialogBuilder.create();
 
 
-        // CREATE ENGLISH-AFRIKAANS TRANSLATER
+        // CREATE ENGLISH-AFRIKAANS TRANSLATOR
         TranslatorOptions options =
                 new TranslatorOptions.Builder()
                         .setSourceLanguage(TranslateLanguage.ENGLISH)
@@ -331,6 +333,7 @@ public class HomeActivity extends AppCompatActivity {
                 Translation.getClient(options);
 
 
+        // DOWNLOAD THE TRANSLATOR IF NEEDED
         DownloadConditions conditions = new DownloadConditions.Builder()
                 .requireWifi()
                 .build();
@@ -387,6 +390,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    // SAVE THE IMAGE DRAWN
     private void saveImage() throws IOException {
         File file = new File(fileName);
 
@@ -405,6 +409,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    // OPEN COLOUR PICKER
     private void openColorPicker() {
         AmbilWarnaDialog ambilWarnaDialog = new AmbilWarnaDialog(this, defaultColor, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
