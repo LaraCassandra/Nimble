@@ -13,11 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/NoActionBarTheme">
         <!-- WORDS ACTIVITY -->
-        <activity
-            android:name=".WordsActivity"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustResize"
-            />
         <!-- PROFILE ACTIVITY -->
         <activity
             android:name=".ProfileActivity"
