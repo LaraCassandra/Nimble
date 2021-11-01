@@ -100,9 +100,6 @@ public class HomeActivity extends AppCompatActivity {
         String name = sharedPreferences.getString(USER_NAME, null);
         String image = sharedPreferences.getString(USER_IMAGE, null);
 
-        // SET RANDOM AVATAR
-        avatar_iv.setImageResource(images[myRandom.nextInt(images.length)]);
-
         // !  NOT WORKING
         // LANGUAGE PICKER
         String language = sharedPreferences.getString(USER_LANGUAGE, null);
@@ -164,6 +161,8 @@ public class HomeActivity extends AppCompatActivity {
             name_tv.setText(name);
         }
 
+        // SET RANDOM AVATAR
+        avatar_iv.setImageResource(images[myRandom.nextInt(images.length)]);
 
         // SET DEFAULT COLOR
         defaultColor = ContextCompat.getColor(HomeActivity.this, R.color.black);
@@ -332,6 +331,7 @@ public class HomeActivity extends AppCompatActivity {
         final Translator englishAfrikaansTranslator =
                 Translation.getClient(options);
 
+        getLifecycle().addObserver(englishAfrikaansTranslator);
 
         // DOWNLOAD THE TRANSLATOR IF NEEDED
         DownloadConditions conditions = new DownloadConditions.Builder()
@@ -377,6 +377,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.makeText(HomeActivity.this, "Could not translate", Toast.LENGTH_SHORT).show();
                             }
                         });
+
 
         dialog2.show();
 

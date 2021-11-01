@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,16 +47,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // FUNCTION ASK PERMISSION TO SAVE IMAGE
         askPermission();
 
+        // FIX THE MOVEMENT WHEN OPENING THE TEXT EDITOR
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         // FIND EDITTEXT BOX AND BUTTON FROM INTERFACE
         name_et = findViewById(R.id.name_et);
         start_btn = findViewById(R.id.start_btn);
 
         // LANGUAGES PICKER
-//        spinner = findViewById(R.id.languages);
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_dropdown_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(adapter);
-//        spinner.setOnItemSelectedListener(this);
+        spinner = findViewById(R.id.languages);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.languages, android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
@@ -117,9 +121,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         language = parent.getItemAtPosition(position).toString().toUpperCase();
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(USER_LANGUAGE, language);
-            editor.apply();
+        Toast.makeText(MainActivity.this, language, Toast.LENGTH_SHORT).show();
+
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_LANGUAGE, language);
+        editor.apply();
 
     }
 
