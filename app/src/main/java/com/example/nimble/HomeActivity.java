@@ -19,7 +19,9 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.mlkit.common.model.DownloadConditions;
+import com.google.mlkit.common.model.RemoteModelManager;
 import com.google.mlkit.nl.translate.TranslateLanguage;
+import com.google.mlkit.nl.translate.TranslateRemoteModel;
 import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
@@ -39,6 +41,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -78,10 +81,10 @@ public class HomeActivity extends AppCompatActivity {
       R.drawable.avatar_5,
       R.drawable.avatar_6
     };
-//
-//    TranslatorOptions options;
-//    Translator myTranslator;
 
+    // SETUP TRANSLATOR
+    Translator myTranslator;
+    TranslatorOptions options;
 
     // CALL SHARED PREFS
     SharedPreferences sharedPreferences;
@@ -322,43 +325,179 @@ public class HomeActivity extends AppCompatActivity {
         dialog2 = dialogBuilder.create();
 
 
-        // CREATE ENGLISH-AFRIKAANS TRANSLATOR
-        TranslatorOptions options =
-                new TranslatorOptions.Builder()
-                        .setSourceLanguage(TranslateLanguage.ENGLISH)
-                        .setTargetLanguage(TranslateLanguage.AFRIKAANS)
-                        .build();
-        final Translator englishAfrikaansTranslator =
-                Translation.getClient(options);
+        // LANGUAGE PICKER
+        sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        String language = sharedPreferences.getString(USER_LANGUAGE, null);
+        RemoteModelManager modelManager = RemoteModelManager.getInstance();
 
-        getLifecycle().addObserver(englishAfrikaansTranslator);
+        modelManager.getDownloadedModels(TranslateRemoteModel.class)
+                .addOnSuccessListener(new OnSuccessListener<Set<TranslateRemoteModel>>() {
+                    @Override
+                    public void onSuccess(@NonNull Set<TranslateRemoteModel> translateRemoteModels) {
 
-        // DOWNLOAD THE TRANSLATOR IF NEEDED
-        DownloadConditions conditions = new DownloadConditions.Builder()
-                .requireWifi()
-                .build();
-        englishAfrikaansTranslator.downloadModelIfNeeded(conditions)
-                .addOnSuccessListener(
-                        new OnSuccessListener() {
-                            @Override
-                            public void onSuccess(Object o) {
-                                // Model downloaded successfully. Okay to start translating.
-                                // (Set a flag, unhide the translation UI, etc.)
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Model couldn’t be downloaded or other internal error.
-                                // ...
-                                Toast.makeText(HomeActivity.this, "Could not download", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                            }
-                        });
+                    }
+                });
+
+        if (language.equals("AFRIKAANS")){
+                    Toast.makeText(HomeActivity.this, "Afrikaans", Toast.LENGTH_SHORT).show();
+
+            TranslateRemoteModel afrikaansModel =
+                    new TranslateRemoteModel.Builder(TranslateLanguage.AFRIKAANS).build();
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+
+            modelManager.download(afrikaansModel, conditions)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            // MODEL DOWNLOADED
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // ERROR
+                        }
+                    });
+
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.AFRIKAANS)
+                    .build();
+
+            myTranslator = Translation.getClient(options);
+
+
+        }
+        else if (language.equals("SPANISH")){
+                    Toast.makeText(HomeActivity.this, "Spanish", Toast.LENGTH_SHORT).show();
+
+            TranslateRemoteModel spanishModel =
+                    new TranslateRemoteModel.Builder(TranslateLanguage.SPANISH).build();
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+
+            modelManager.download(spanishModel, conditions)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            // MODEL DOWNLOADED
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // ERROR
+                        }
+                    });
+
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.SPANISH)
+                    .build();
+
+            myTranslator = Translation.getClient(options);
+
+        }
+        else if (language.equals("FRENCH")){
+                    Toast.makeText(HomeActivity.this, "French", Toast.LENGTH_SHORT).show();
+
+                    TranslateRemoteModel frenchModel =
+                            new TranslateRemoteModel.Builder(TranslateLanguage.FRENCH).build();
+
+                    DownloadConditions conditions = new DownloadConditions.Builder()
+                            .requireWifi()
+                            .build();
+
+                    modelManager.download(frenchModel, conditions)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(@NonNull Void unused) {
+                                    // MODEL DOWNLOADED
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    // ERROR
+                                }
+                            });
+
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.FRENCH)
+                    .build();
+
+            myTranslator = Translation.getClient(options);
+
+        }
+        else if (language.equals("GERMAN")){
+                    Toast.makeText(HomeActivity.this, "German", Toast.LENGTH_SHORT).show();
+
+            TranslateRemoteModel germanModel =
+                    new TranslateRemoteModel.Builder(TranslateLanguage.GERMAN).build();
+
+            DownloadConditions conditions = new DownloadConditions.Builder()
+                    .requireWifi()
+                    .build();
+
+            modelManager.download(germanModel, conditions)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            // MODEL DOWNLOADED
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // ERROR
+                        }
+                    });
+
+            options = new TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.GERMAN)
+                    .build();
+
+            myTranslator = Translation.getClient(options);
+        }
+
+
+//        // DOWNLOAD THE TRANSLATOR IF NEEDED
+//        myTranslator.downloadModelIfNeeded()
+//                .addOnSuccessListener(
+//                        new OnSuccessListener() {
+//                            @Override
+//                            public void onSuccess(Object o) {
+//                                // Model downloaded successfully. Okay to start translating.
+//                                // (Set a flag, unhide the translation UI, etc.)
+//                            }
+//                        })
+//                .addOnFailureListener(
+//                        new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                // Model couldn’t be downloaded or other internal error.
+//                                // ...
+//                                Toast.makeText(HomeActivity.this, "Could not download", Toast.LENGTH_SHORT).show();
+//
+//                            }
+//                        });
+
 
         // TRANSLATE THE TEXT
-        englishAfrikaansTranslator.translate(translateText)
+        myTranslator.translate(translateText)
                 .addOnSuccessListener(
                         new OnSuccessListener<String>() {
                             @Override
@@ -366,7 +505,6 @@ public class HomeActivity extends AppCompatActivity {
                                 // Translation successful.
                                 Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                 translated_tv.setText(translatedText);
-
                             }
                         })
                 .addOnFailureListener(
@@ -386,6 +524,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog2.dismiss();
+                myTranslator.close();
             }
         });
 
