@@ -104,6 +104,10 @@ public class ProfileActivity extends AppCompatActivity {
                     editor.putString(USER_NAME, name_et.getText().toString());
                     editor.apply();
 
+                    String savedName = sharedPreferences.getString(USER_NAME, null);
+
+                    username_tv.setText(savedName);
+
                     // CLOSE EDIT POPUP
                     editDialog.dismiss();
                 }
