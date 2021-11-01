@@ -1,11 +1,16 @@
 package com.example.nimble;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -33,12 +38,16 @@ import com.google.mlkit.vision.label.ImageLabeling;
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 import com.ibm.cloud.sdk.core.security.IamAuthenticator;
 import com.ibm.cloud.sdk.core.security.IamToken;
+import com.ibm.watson.text_to_speech.v1.TextToSpeech;
+import com.ibm.watson.text_to_speech.v1.model.SynthesizeOptions;
+import com.ibm.watson.text_to_speech.v1.util.WaveUtils;
 import com.kyanogen.signatureview.SignatureView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,13 +61,13 @@ public class HomeActivity extends AppCompatActivity {
 
     // VARIABLES
     TextView name_tv, image_tv, translated_tv;
-    ImageButton avatar_iv;
+    ImageButton avatar_iv, sound_ib;
     Button btn_submit, btn_popup_close, btn_popup_next, btn_popup_okay;
     
     public String translateText = "";
     public String test = "";
     //public String translatedText = "";
-    
+
     // DRAWING
     SignatureView signatureView;
     ImageButton btn_color, btn_eraser, btn_save;
@@ -88,6 +97,7 @@ public class HomeActivity extends AppCompatActivity {
     // SETUP TRANSLATOR
     Translator myTranslator;
     TranslatorOptions options;
+    public String voiceLang;
 
     // CALL SHARED PREFS
     SharedPreferences sharedPreferences;
@@ -95,6 +105,9 @@ public class HomeActivity extends AppCompatActivity {
     private static final String USER_NAME = "userName";
     private static final String USER_IMAGE = "userImage";
     private static final String USER_LANGUAGE = "userLanguage";
+
+    // TEXT TO SPEECH
+    final static int BUFFER_SIZE = 1024;
 
 
     @Override
@@ -323,6 +336,7 @@ public class HomeActivity extends AppCompatActivity {
 
         translated_tv = popupView2.findViewById(R.id.translated_tv);
         btn_popup_okay = popupView2.findViewById(R.id.btn_popup_okay);
+        sound_ib = popupView2.findViewById(R.id.sound_ib);
 
         dialogBuilder.setView(popupView2);
         dialog2 = dialogBuilder.create();
@@ -377,6 +391,7 @@ public class HomeActivity extends AppCompatActivity {
                     .build();
 
             myTranslator = Translation.getClient(options);
+            voiceLang = "en-US_AllisonV3Voice";
 
 
         }
@@ -410,6 +425,7 @@ public class HomeActivity extends AppCompatActivity {
                     .build();
 
             myTranslator = Translation.getClient(options);
+            voiceLang = "es-ES_LauraV3Voice";
 
         }
         else if (language.equals("FRENCH")){
@@ -442,6 +458,7 @@ public class HomeActivity extends AppCompatActivity {
                     .build();
 
             myTranslator = Translation.getClient(options);
+            voiceLang = "fr-FR_ReneeV3Voice";
 
         }
         else if (language.equals("GERMAN")){
@@ -474,6 +491,7 @@ public class HomeActivity extends AppCompatActivity {
                     .build();
 
             myTranslator = Translation.getClient(options);
+            voiceLang = "de-DE_BirgitV3Voice";
         }
 
 
@@ -508,6 +526,28 @@ public class HomeActivity extends AppCompatActivity {
                                 // Translation successful.
                                 Toast.makeText(HomeActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                 translated_tv.setText(translatedText);
+
+                                // PLAY TEXT TO SPEECH SOUND
+                                sound_ib.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Thread thread = new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                String text = translatedText;
+                                                String voice = voiceLang;
+                                                try {
+                                                    createSoundFile(text, voice);
+                                                    playSoundFile(text + voice);
+                                                } catch (IOException e){
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+
+                                        thread.start();
+                                    }
+                                });
                             }
                         })
                 .addOnFailureListener(
@@ -518,7 +558,6 @@ public class HomeActivity extends AppCompatActivity {
                                 Toast.makeText(HomeActivity.this, "Could not translate", Toast.LENGTH_SHORT).show();
                             }
                         });
-
 
         dialog2.show();
 
@@ -569,6 +608,62 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         ambilWarnaDialog.show();
+    }
+
+    public void createSoundFile(String text, String voice) throws IOException{
+
+        IamAuthenticator authenticator = new IamAuthenticator("lTT7rSYB3LGtQW2D2odZKcMxsHBJQsRE6fvtvcpQKAs_");
+        TextToSpeech textToSpeech = new TextToSpeech(authenticator);
+        textToSpeech.setServiceUrl("https://api.au-syd.text-to-speech.watson.cloud.ibm.com");
+
+        SynthesizeOptions synthesizeOptions = new SynthesizeOptions.Builder()
+                .text(text)
+                .accept("audio/mp3")
+                .voice(voice)
+                .build();
+
+        InputStream inputStream = textToSpeech.synthesize(synthesizeOptions).execute().getResult();
+        InputStream in = WaveUtils.reWriteWaveHeader(inputStream);
+
+        String fileName = text + voice;
+        FileOutputStream fos = getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = in.read(buffer)) > 0){
+            fos.write(buffer, 0, length);
+        }
+        fos.close();
+
+        in.close();
+        inputStream.close();
+    }
+
+    public void playSoundFile(String fileName) throws IOException {
+
+        File file = new File(getApplicationContext().getFilesDir(), fileName);
+        Uri fileUri = Uri.parse(file.getPath());
+        MediaPlayer mediaPlayer = new MediaPlayer();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaPlayer.setAudioAttributes(
+                    new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .build()
+            );
+        } else {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+        mediaPlayer.setDataSource(getApplicationContext(), fileUri);
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mp.start();
+            }
+        });
+        mediaPlayer.prepareAsync();
     }
 
 }
