@@ -1,39 +1,39 @@
-<!-- REPLACE ALL THE [USERNAME] TEXT WITH YOUR GITHUB PROFILE NAME & THE [PROJECTNAME] WITH THE NAME OF YOUR GITHUB PROJECT -->
+<!-- REPLACE ALL THE [laracassandra] TEXT WITH YOUR GITHUB PROFILE NAME & THE [nimble] WITH THE NAME OF YOUR GITHUB PROJECT -->
 
 <!-- Repository Information & Links-->
 <br />
 
-![GitHub repo size](https://img.shields.io/github/repo-size/username/projectname?color=%000000)
-![GitHub watchers](https://img.shields.io/github/watchers/username/projectname?color=%000000)
-![GitHub language count](https://img.shields.io/github/languages/count/username/projectname?color=%000000)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/username/projectname?color=%000000)
+![GitHub repo size](https://img.shields.io/github/repo-size/laracassandra/nimble?color=%23BD8EF0&style=flat-square)
+![GitHub watchers](https://img.shields.io/github/watchers/laracassandra/nimble?color=%23AFD2EF&style=flat-square)
+![GitHub language count](https://img.shields.io/github/languages/count/laracassandra/nimble?color=%23D0F486&style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/laracassandra/nimble?color=%23FFCE5D&style=flat-square)
 [![LinkedIn][linkedin-shield]][linkedin-url]
-[![Instagram][instagram-shield]][instagram-url]
-[![Behance][behance-shield]][behance-url]
+<!-- [![Instagram][instagram-shield]][instagram-url]
+[![Behance][behance-shield]][behance-url] -->
 
 <!-- HEADER SECTION -->
-<h5 align="center" style="padding:0;margin:0;">Your Name & Surname</h5>
-<h5 align="center" style="padding:0;margin:0;">Student Number</h5>
-<h6 align="center">Subject Name & Year</h6>
+<h5 align="center" style="padding:0;margin:0;">Lara Cook</h5>
+<h5 align="center" style="padding:0;margin:0;">190218</h5>
+<h6 align="center">IDV304</h6>
 </br>
 <p align="center">
 
-  <a href="https://github.com/username/projectname">
-    <img src="path/to/logo" alt="Logo" width="140" height="140">
+  <a href="https://github.com/laracassandra/nimble">
+    <img src="images/logo.png" alt="Logo" width="140" height="">
   </a>
   
-  <h3 align="center">Project Name</h3>
+  <h3 align="center">Nimble</h3>
 
   <p align="center">
-    Short Project Slogan / Description <br>
-      <a href="https://github.com/username/projectname"><strong>Explore the docs »</strong></a>
+    Where drawing meets learning <br>
+      <a href="https://github.com/laracassandra/nimble"><strong>Explore the docs »</strong></a>
    <br />
    <br />
    <a href="path/to/demonstration/video">View Demo</a>
     ·
-    <a href="https://github.com/username/projectname/issues">Report Bug</a>
+    <a href="https://github.com/laracassandra/nimble/issues">Report Bug</a>
     ·
-    <a href="https://github.com/username/projectname/issues">Request Feature</a>
+    <a href="https://github.com/laracassandra/nimble/issues">Request Feature</a>
 </p>
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
@@ -99,12 +99,12 @@ Here are a couple of ways to clone this repo:
 
 1. Software </br>
 `Android Studio` -> `File` -> `New` -> `From Version Control` -> `Git`</br>
-Enter `https://github.com/username/projectname.git` into the URL field and press the `Clone` button.
+Enter `https://github.com/laracassandra/nimble.git` into the URL field and press the `Clone` button.
 
 2. Clone Repository </br>
 Run the following in the command-line to clone the project:
    ```sh
-   git clone https://github.com/username/projectname.git
+   git clone https://github.com/laracassandra/nimble.git
    ```
     Open `Software` and select `File | Open...` from the menu. Select cloned directory and press `Open` button
 
@@ -139,7 +139,6 @@ Description of Feature
 
 Description of Feature
 
-![image5][image5]
 
 
 <!-- CONCEPT PROCESS -->
@@ -227,7 +226,7 @@ To see a run through of the application, click below:
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/username/projectname/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/laracassandra/nimble/issues) for a list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -243,7 +242,7 @@ Contributions are what makes the open-source community such an amazing place to 
 <!-- AUTHORS -->
 ## Authors
 
-* **Your Name & Surname** - [username](https://github.com/username)
+* **Lara Cook** - [laracassandra](https://github.com/laracassandra)
 
 <!-- LICENSE -->
 ## License
@@ -253,13 +252,13 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 <!-- LICENSE -->
 ## Contact
 
-* **Your Name & Surname** - [email@address](mailto:email@address) - [@instagram_handle](https://www.instagram.com/instagram_handle/) 
-* **Project Link** - https://github.com/username/projectname
+* **Lara Cook** - [larac.cook@gmail.com](mailto:larac.cook@gmail.com)
+* **Project Link** - https://github.com/laracassandra/nimble
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 <!-- all resources that you used and Acknowledgements here -->
-* [Resource Name](path/to/resource)
+* [Lecturer: Armand Pretorius](https://github.com/ArmandPretorius)
 * [Resource Name](path/to/resource)
 * [Resource Name](path/to/resource)
 * [Resource Name](path/to/resource)
@@ -267,16 +266,16 @@ Distributed under the MIT License. See `LICENSE` for more information.\
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[image1]: /path/to/image.png
-[image2]: /path/to/image.png
-[image3]: /path/to/image.png
-[image4]: /path/to/image.png
-[image5]: /path/to/image.png
-[image6]: /path/to/image.png
-[image7]: /path/to/image.png
-[image8]: /path/to/image.png
-[image9]: /path/to/image.png
-[image10]: /path/to/image.png
+[image1]: images/image-1.png
+[image2]: images/image-2.png
+[image3]: images/image-3.png
+[image4]: images/image-4.png
+[image5]: images/image-5.png
+[image6]: images/image-6.png
+[image7]: images/image-7.png
+[image8]: images/image-8.png
+[image9]: images/image-9.png
+[image10]: images/image-10.png
 
 
 <!-- Refer to https://shields.io/ for more information and options about the shield links at the top of the ReadMe file -->
